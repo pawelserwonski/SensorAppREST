@@ -1,33 +1,33 @@
-- id: "3142"
+- id: "2567"
   engine: "123"
   type: "pressure"
-  name: "Engine 123"
-  value: 70
-  min_value: 0
-  max_value: 120
-- id: "32234"
-  master-sensor-id: "3142"
+  name: "pressure 123"
+  value: 2004
+  min_value: 1500
+  max_value: 5000
+- id: "78945"
+  master-sensor-id: "2567"
   type: "temperature"
   value: 82
   min_value: -50
   max_value: 150
-- id: "57230"
-  master-sensor-id: "3142"
+- id: "78946"
+  master-sensor-id: "2567"
   type: "temperature"
   value: 101
   min_value: 0
-  max_value: 273
-- id: "5703"
+  max_value: 350
+- id: "3001"
   engine: "156"
-  location: ""
+  location: "A block left side"
   type: "pressure"
-  name: "Engine 156"
-  value: 73
-  min_value: 0
-  max_value: 150
-- id: "89145"
-  master-sensor-id: "5703"
+  name: ""
+  value: 1600
+  min_value: 500
+  max_value: 3000
+- id: "20100"
+  master-sensor-id: "3001"
   type: "temperature"
   value: 99
   min_value: 0
-max_value: 100
+  max_value: 100

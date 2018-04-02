@@ -1,60 +1,70 @@
-# Sensor App
+# Sensors
+
+Java + Spring Boot + Spring MVC + H2 + Tomcat + Maven
+
+## Task Content
+We have defined list of sensors installed in variety of engines. Every engine has exactly one pressure sensor and at least one temperature sensor. The task is to write web service with HTTP/REST interface, which will enable to update current value of sensors and on demand will return the list of incorrectly working engines.
+
+Server should download data containing list of sensors in YAML-format file from repository placed on GitHub server. Example of list:
+
+```
+- id: "2567"
+  engine: "123"
+  type: "pressure"
+  name: "pressure 123"
+  value: 2004
+  min_value: 1500
+  max_value: 5000
+- id: "78946"
+  master-sensor-id: "2567"
+  type: "temperature"
+  value: 101
+  min_value: 0
+  max_value: 350
+```
+
+Where:
+* 'id' - id number of sensor
+* 'type' - info about type of sensor (allowed values are *pressure* and *temperature*)
+* 'engine' - id of engine assigned to pressure sensor
+* 'master-sensor-id' - id of temperature sensor assigned to parent pressure sensor
+* 'value' - current value of measured units
+* 'min_value' - minimal value which can be measured by the sensor
+* 'max_value' - maximum value which can be measured by the sensor
+
+Note: As we can see in the example, list has no beginning header and every object can have not only required values, but also additional, meaningless ones.
 
 ## Requirements
 
-Software requirements to compile this application:
-* JDK version 8 (1.8) or newer
-* Maven
-
-To install this software on Debian/Ubuntu type below lines in terminal:
-
+HTTP server should get URL to input file as an argument, when it is starting in command line, for example:
 ```
-sudo apt-get update
-sudo apt-get install default-jre
-sudo apt-get install default-jdk
-sudo apt-get install maven
+./server --config=https://github.com/pawelserwonski/SensorAppREST/blob/master/sensors/sensorList.yml
 ```
 
-To install JDK and Maven in Microsoft Windows please go to this websites:
-* http://www.oracle.com/technetwork/java/javase/downloads/index.html
-* https://maven.apache.org/download.
+Server should enable to execute following HTTP queries:
 
-In Microsoft Windows to use Maven as it is shown in this insctruction you need to add mvn.cmd to path. Guide how to do it:
-* https://maven.apache.org/guides/getting-started/windows-prerequisites.html
-* https://www.mkyong.com/maven/how-to-install-maven-in-windows/
-
-## Compile
-
-To compile this app you need to open terminal and go directory containing **pom.xml** file and **src** folder. You can to it by typing:
+1. Getting list of incorrectly working engines.
 ```
-cd <path_to_directory>
+curl -XGET "http://localhost:8080/engines?pressure_threshold=40&temp_threshold=50"
 ```
 
-You can also open folder in Explorer, right click (in Windows please hold Shift while right-clicking) and choose `Open terminal here` (in Windows terminal app is called `PowerShell`).
+where:
+* pressure_threshold - value of pressure **below** which we consider engine as working incorrectly
+* temp_threshold - value of temperature **above** which we consider engine as working incorrectly
 
-Having the terminal opened in the directory this will compile app, run tests and create *.war file:
-```
-mvn clean package
-```
+Result returned in response in HTTP body should contain list of engines, which has value of pressure below *pressure_threshold* **and also** value of temperature at least on one sensor above *temperature_threshold*. Result should have list of engines IDs in JSON format.
 
-To run only unit tests type:
+2. Updating sensor current value.
 ```
-mvn test
-```
-
-Effect of compiling and testing will be shown in terminal. Compiled files will be in `target` folder.
-## Running the application
-
-To run application you need to open `target` directory in terminal. Type in terminal:
-```
-cd target
+curl -XPOST "http://localhost:8080/sensors/89145" -H "Content-Type: application/json: -d '{"operation": "increment", "value": "5"}'
 ```
 
-To run application type below code in terminal:
-```
-java -jar SensorApp-1.0-SNAPSHOT.war --config=<url_to_github_yml_file>
-```
+Possible values for *operation* field are:
+* set - setting value 
+* increment - incrementing value
+* decrement - decrementing value
 
-Where `<url_to_github_yml_file>` is a link to file placed in Github repository containing list of sensors. (Example of file: https://github.com/relayr/pdm-test/blob/master/sensors.yml)
+It must be ensured that values will not go beyond defined min and max values.
 
-Note: --config parameter is not necessary however ommiting it will start application with empty repository. It is option recommended only to run the tests.
+## Additional task
+Write an instruction how to compile the code, run tests and run the solution. Everything should be in INSTRUCTION.md file.
