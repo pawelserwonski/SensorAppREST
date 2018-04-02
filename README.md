@@ -1,5 +1,4 @@
 # Sensor App
-Paweł Serwoński - Relayr Recruitment Task
 
 ## Requirements
 
