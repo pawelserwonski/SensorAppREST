@@ -68,3 +68,9 @@ It must be ensured that values will not go beyond defined min and max values.
 
 ## Additional task
 Write an instruction how to compile the code, run tests and run the solution. Everything should be in INSTRUCTION.md file.
+
+## TODO
+Although app is working, it still needs some improvements. Next I'm going to focus on:
+* GithubYamlParser - improving retrieving raw file from Github server (especially replacing current method of preparing URL to raw file)
+* Whole app - add coments
+* Whole app - set up project to compile also as Docker container
